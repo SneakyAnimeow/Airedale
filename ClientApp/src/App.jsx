@@ -1,12 +1,16 @@
-import Tile from "./components/Tile.tsx";
 import "./custom.css"
+import {BrowserRouter as Router, Route, Routes as Switch} from "react-router-dom";
+import Login from "./Login.tsx";
+import Home from "./Home.tsx";
 
 function App() {
   return (
-      <div className="tiles">
-          <Tile value="value" title="title" img="https://us.123rf.com/450wm/aquir/aquir1909/aquir190907813/129839336-example-button-example-rounded-green-sign-example.jpg?ver=6"/>
-          <Tile value="value" title="title" img="https://us.123rf.com/450wm/aquir/aquir1909/aquir190907813/129839336-example-button-example-rounded-green-sign-example.jpg?ver=6"/>
-      </div>
+      <Router>
+          <Switch>
+              <Route path="/login" element={<Login/>}/>
+              <Route path="/" element={<Home/>}/>
+          </Switch>
+      </Router>
   );
 }
 

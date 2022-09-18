@@ -1,7 +1,9 @@
+using Airedale;
+using Airedale.Database.Context;
+using Airedale.Database.Model;
 using Airedale.GraphQL;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
-using Microsoft.AspNetCore.Identity;
+using Airedale.Security;
+using PasswordGenerator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,18 +15,7 @@ builder.Services.AddGraphQLServer()
     .AddQueryType<Query>()
     .AddMutationType<Mutation>();
 
-builder.Services.AddRazorPages();
-
-builder.Services
-    .AddAuthentication(options => {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = MicrosoftAccountDefaults.AuthenticationScheme;
-    })
-    .AddMicrosoftAccount(microsoftOptions => {
-        microsoftOptions.ClientId = "[REDACTED]";
-        microsoftOptions.ClientSecret = "[REDACTED]";
-    });
-
+AiredaleConfig.Instance = builder.Configuration.GetSection("Airedale").Get<AiredaleConfig>();
 
 var app = builder.Build();
 
@@ -33,14 +24,8 @@ if (!app.Environment.IsDevelopment()) {
     app.UseHsts();
 }
 
-if(app.Environment.IsDevelopment()) {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Airedale CMS API v1");
-    });
-}
-
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 app.UseRouting();
 
@@ -53,6 +38,35 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html");
 
-app.MapGraphQL();
+app.MapGraphQL("/api/graphql");
+
+if (app.Environment.IsDevelopment()) {
+    app.UseSwagger();
+    app.UseSwaggerUI(c => {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Airedale CMS API v1");
+    });
+}
+
+app.UseSecurity();
+
+var initializeDatabase = () => {
+    var context = new AiredaleDbContext();
+    
+    if(!context.Users.Any(user => user.Name == "admin")) {
+        var password = new Password().Next();
+        
+        Console.WriteLine($"No admin user found, creating user 'admin' with password: {password}");
+        
+        context.Users.Add(new User {
+            Name = "admin",
+            PassHash = AiredaleArgon2.Hash(password),
+            Token = Guid.NewGuid().ToString()
+        });
+    }
+
+    context.SaveChanges();
+};
+
+initializeDatabase();
 
 app.Run();

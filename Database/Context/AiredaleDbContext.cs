@@ -16,6 +16,7 @@ namespace Airedale.Database.Context
 
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -46,6 +47,14 @@ namespace Airedale.Database.Context
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Services)
                     .HasForeignKey(d => d.CategoryId);
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("User");
+
+                entity.HasIndex(e => e.Name, "IX_User_Name")
+                    .IsUnique();
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -16,10 +16,7 @@
     <ItemGroup>
         <PackageReference Include="HotChocolate" Version="12.13.2" />
         <PackageReference Include="HotChocolate.AspNetCore" Version="12.13.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="6.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OAuth" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
+        <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.12" />
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
@@ -27,6 +24,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
+        <PackageReference Include="PasswordGenerator" Version="2.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
@@ -35,10 +33,15 @@
         <Content Remove="$(SpaRoot)**" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+        <None Update="database.db">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
       <TypeScriptCompile Include="ClientApp\src\components\Tile.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\Home.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\Login.tsx" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
