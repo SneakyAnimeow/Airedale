@@ -7,11 +7,6 @@ namespace Airedale.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class LoginController : ControllerBase {
-    [HttpGet]
-    public string Login() {
-        return "This endpoint is not accessible using GET method";
-    }
-    
     [HttpPost]
     public IActionResult Login([FromForm] string username, [FromForm] string password) {
         var context = new AiredaleDbContext();
@@ -28,6 +23,26 @@ public class LoginController : ControllerBase {
         context.SaveChanges();
 
         Response.Cookies.Append("token", user.Token);
+        
+        return Ok();
+    }
+    
+    [HttpGet]
+    public IActionResult Logout() {
+        var context = new AiredaleDbContext();
+        
+        var user = context.Users.FirstOrDefault(u => u.Token == Request.Cookies["token"]);
+        
+        if (user == null) {
+            return Unauthorized();
+        }
+
+        user.Token = Guid.NewGuid().ToString();
+
+        context.Users.Update(user);
+        context.SaveChanges();
+
+        Response.Cookies.Delete("token");
         
         return Ok();
     }
