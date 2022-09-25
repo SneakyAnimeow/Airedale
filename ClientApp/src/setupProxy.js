@@ -5,7 +5,8 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
   env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:64119';
 
 const context =  [
-  "/api/Login",
+  "/api/Login/Login",
+  "/api/Login/Logout",
   "/api/graphql",
 ];
 

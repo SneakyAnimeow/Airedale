@@ -5,10 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace Airedale.Controllers; 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 public class LoginController : ControllerBase {
     [HttpPost]
     public IActionResult Login([FromForm] string username, [FromForm] string password) {
+        if(username == "anonymous" && password == "anonymous") {
+            Response.Cookies.Append("token", "anonymous");
+            return Ok();
+        }
+        
         var context = new AiredaleDbContext();
         
         var user = context.Users.FirstOrDefault(u => u.Name == username);
@@ -29,6 +34,11 @@ public class LoginController : ControllerBase {
     
     [HttpGet]
     public IActionResult Logout() {
+        if(Request.Cookies["token"] == "anonymous") {
+            Response.Cookies.Delete("token");
+            return Ok();
+        }
+        
         var context = new AiredaleDbContext();
         
         var user = context.Users.FirstOrDefault(u => u.Token == Request.Cookies["token"]);

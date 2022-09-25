@@ -1,11 +1,14 @@
 ﻿using Airedale.Database.Context;
 using Airedale.GraphQL.DataTypes;
+using Airedale.Security;
 
 namespace Airedale.GraphQL; 
 
 public class Mutation {
     [GraphQLDescription("Creates a new category")]
-    public Category AddCategory(string name, string? description, string? imageUrl) {
+    public Category AddCategory([Service] IHttpContextAccessor accessor, string name, string? description, string? imageUrl) {
+        GraphQLSecurity.Authenticate(accessor.HttpContext!.Request.Cookies["token"]!);
+        
         var context = new AiredaleDbContext();
         
         var entity = context.Categories.Add(new Database.Model.Category() {
@@ -20,7 +23,9 @@ public class Mutation {
     }
     
     [GraphQLDescription("Updates an existing category")]
-    public Category UpdateCategory(int id, string name, string? description, string? imageUrl) {
+    public Category UpdateCategory([Service] IHttpContextAccessor accessor, int id, string name, string? description, string? imageUrl) {
+        GraphQLSecurity.Authenticate(accessor.HttpContext!.Request.Cookies["token"]!);
+        
         var context = new AiredaleDbContext();
         
         var entity = context.Categories.Update(new Database.Model.Category() {
@@ -36,11 +41,13 @@ public class Mutation {
     }
     
     [GraphQLDescription("Deletes an existing category")]
-    public bool DeleteCategory(int id) {
+    public bool DeleteCategory([Service] IHttpContextAccessor accessor, int id) {
+        GraphQLSecurity.Authenticate(accessor.HttpContext!.Request.Cookies["token"]!);
+        
         var context = new AiredaleDbContext();
         
         var entity = context.Categories.Find(id);
-        context.Categories.Remove(entity);
+        if (entity != null) context.Categories.Remove(entity);
 
         context.SaveChanges();
 
@@ -48,7 +55,9 @@ public class Mutation {
     }
     
     [GraphQLDescription("Creates a new service and adds it to a category")]
-    public Service AddService(string name, string? description, string? imageUrl, int categoryId) {
+    public Service AddService([Service] IHttpContextAccessor accessor, string name, string? description, string? imageUrl, int categoryId) {
+        GraphQLSecurity.Authenticate(accessor.HttpContext!.Request.Cookies["token"]!);
+        
         var context = new AiredaleDbContext();
         
         var entity = context.Services.Add(new Database.Model.Service() {
@@ -64,7 +73,9 @@ public class Mutation {
     }
     
     [GraphQLDescription("Updates an existing service")]
-    public Service UpdateService(int id, string name, string? description, string? imageUrl, int categoryId) {
+    public Service UpdateService([Service] IHttpContextAccessor accessor, int id, string name, string? description, string? imageUrl, int categoryId) {
+        GraphQLSecurity.Authenticate(accessor.HttpContext!.Request.Cookies["token"]!);
+        
         var context = new AiredaleDbContext();
         
         var entity = context.Services.Update(new Database.Model.Service() {
@@ -81,11 +92,13 @@ public class Mutation {
     }
     
     [GraphQLDescription("Deletes an existing service")]
-    public bool DeleteService(int id) {
+    public bool DeleteService([Service] IHttpContextAccessor accessor, int id) {
+        GraphQLSecurity.Authenticate(accessor.HttpContext!.Request.Cookies["token"]!);
+        
         var context = new AiredaleDbContext();
         
         var entity = context.Services.Find(id);
-        context.Services.Remove(entity);
+        if (entity != null) context.Services.Remove(entity);
 
         context.SaveChanges();
 

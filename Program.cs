@@ -7,6 +7,10 @@ using PasswordGenerator;
 
 var builder = WebApplication.CreateBuilder(args);
 
+AiredaleConfig.Instance = builder.Configuration.GetSection("Airedale").Get<AiredaleConfig>();
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSwaggerGen();
@@ -14,8 +18,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddGraphQLServer()
     .AddQueryType<Query>()
     .AddMutationType<Mutation>();
-
-AiredaleConfig.Instance = builder.Configuration.GetSection("Airedale").Get<AiredaleConfig>();
 
 var app = builder.Build();
 
