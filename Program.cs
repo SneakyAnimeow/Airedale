@@ -4,6 +4,7 @@ using Airedale.Database.Model;
 using Airedale.GraphQL;
 using Airedale.Security;
 using PasswordGenerator;
+using Path = System.IO.Path;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,9 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Airedale.xml"));
+});
 
 builder.Services.AddGraphQLServer()
     .AddQueryType<Query>()

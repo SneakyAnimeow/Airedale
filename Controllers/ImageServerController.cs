@@ -8,7 +8,7 @@ namespace Airedale.Controllers;
 public class ImageServerController : ControllerBase {
     /// <summary>
     /// Uploads an image to the server
-    /// Requires authentication
+    /// [Requires authentication]
     /// </summary>
     /// <param name="file"></param>
     [HttpPut]
@@ -24,7 +24,7 @@ public class ImageServerController : ControllerBase {
 
     /// <summary>
     /// Deletes an image from the server
-    /// Requires authentication
+    /// [Requires authentication]
     /// </summary>
     /// <param name="fileName"></param>
     /// <returns></returns>
@@ -57,7 +57,7 @@ public class ImageServerController : ControllerBase {
 
     /// <summary>
     /// Lists all images on the server
-    /// Requires authentication
+    /// [Requires authentication]
     /// </summary>
     /// <returns></returns>
     [HttpGet]

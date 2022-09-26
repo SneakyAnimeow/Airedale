@@ -40,7 +40,7 @@ public class LoginController : ControllerBase {
     
     /// <summary>
     /// Logs out the user by deleting the token
-    /// Requires at least anonymous authentication
+    /// [Requires at least anonymous authentication]
     /// </summary>
     /// <returns></returns>
     [HttpGet]
