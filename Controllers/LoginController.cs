@@ -7,6 +7,12 @@ namespace Airedale.Controllers;
 [ApiController]
 [Route("api/[controller]/[action]")]
 public class LoginController : ControllerBase {
+    /// <summary>
+    /// Logs in by generating a new token and sending it to the client in a cookie.
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <returns></returns>
     [HttpPost]
     public IActionResult Login([FromForm] string username, [FromForm] string password) {
         if(username == "anonymous" && password == "anonymous") {
@@ -32,6 +38,11 @@ public class LoginController : ControllerBase {
         return Ok();
     }
     
+    /// <summary>
+    /// Logs out the user by deleting the token
+    /// Requires at least anonymous authentication
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public IActionResult Logout() {
         if(Request.Cookies["token"] == "anonymous") {

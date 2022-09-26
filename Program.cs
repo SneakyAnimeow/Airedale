@@ -44,26 +44,26 @@ app.MapGraphQL("/api/graphql");
 
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
-    app.UseSwaggerUI(c => {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Airedale CMS API v1");
-    });
+    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Airedale CMS API v1"); });
 }
 
 app.UseSecurity();
 
 var initializeDatabase = () => {
     var context = new AiredaleDbContext();
-    
-    if(!context.Users.Any(user => user.Name == "admin")) {
+
+    if (!context.Users.Any(user => user.Name == "admin")) {
         var password = new Password().Next();
-        
+
         Console.WriteLine($"No admin user found, creating user 'admin' with password: {password}");
-        
+
         context.Users.Add(new User {
             Name = "admin",
             PassHash = AiredaleArgon2.Hash(password),
             Token = Guid.NewGuid().ToString()
         });
+
+        Directory.CreateDirectory("images");
     }
 
     context.SaveChanges();
